@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"github.com/cloudfoundry-community/go-cfenv"
+	"github.com/mitchellh/mapstructure"
 )
 
 var (
@@ -54,8 +56,39 @@ var allRabbitCapabilities = rabbitCapabilitySet{
 	rabbitCapBert:   true,
 }
 
-func initConfig() {
+func getCloudFoundryConfig() rabbitExporterConfig {
 	config = defaultConfig
+	appEnv, _ := cfenv.Current()
+	if appEnv == nil {
+		return config
+	}
+
+	var serviceName string
+	for name, _ := range appEnv.Services {
+		if (strings.Contains(name, "rabbitmq")) {
+				serviceName = name
+				break
+		}
+	}
+
+	if serviceName == "" {
+		return config
+	}
+
+	protocols := map[string]interface{}{}
+	mapstructure.Decode(appEnv.Services[serviceName][0].Credentials["protocols"], &protocols) 
+
+	managementCredentials := map[string]interface{}{}
+	mapstructure.Decode(protocols["management"], &managementCredentials) 
+        config.RabbitURL = "http://" + managementCredentials["host"].(string) + ":" + strconv.Itoa(int(managementCredentials["port"].(float64)))
+	config.RabbitUsername = managementCredentials["username"].(string) 
+	config.RabbitPassword = managementCredentials["password"].(string)
+	return config
+}
+
+func initConfig() {
+	config = getCloudFoundryConfig()
+
 	if url := os.Getenv("RABBIT_URL"); url != "" {
 		if valid, _ := regexp.MatchString("https?://[a-zA-Z.0-9]+", strings.ToLower(url)); valid {
 			config.RabbitURL = url
