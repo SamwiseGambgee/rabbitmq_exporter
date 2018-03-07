@@ -1,0 +1,9 @@
+---
+applications:
+  - name: rabbitmq_exporter
+    memory: 1G
+    instances: 1
+    buildpack: https://github.com/cloudfoundry/go-buildpack.git#v1.8.19
+    domain: eu-west.philips-healthsuite.com
+    env:
+      GOPACKAGENAME: github.com/kbudde/rabbitmq_exporter
