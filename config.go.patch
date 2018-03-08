@@ -50,5 +50,5 @@ index d57b9c9..33fff70 100644
 +	config = getCloudFoundryConfig()
 +
  	if url := os.Getenv("RABBIT_URL"); url != "" {
- 		if valid, _ := regexp.MatchString("https?://[a-zA-Z.0-9]+", strings.ToLower(url)); valid {
+ 		if valid, _ := regexp.MatchString("http?://[a-zA-Z.0-9]+", strings.ToLower(url)); valid {
  			config.RabbitURL = url

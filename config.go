@@ -13,10 +13,10 @@ import (
 var (
 	config        rabbitExporterConfig
 	defaultConfig = rabbitExporterConfig{
-		RabbitURL:          "http://localhost:15672",
+		RabbitURL:          "https://localhost:15672",
 		RabbitUsername:     "guest",
 		RabbitPassword:     "guest",
-		PublishPort:        "9090",
+		PublishPort:        "9419",
 		PublishAddr:        "",
 		OutputFormat:       "TTY", //JSON
 		CAFile:             "ca.pem",
@@ -80,7 +80,7 @@ func getCloudFoundryConfig() rabbitExporterConfig {
 
 	managementCredentials := map[string]interface{}{}
 	mapstructure.Decode(protocols["management"], &managementCredentials) 
-        config.RabbitURL = "http://" + managementCredentials["host"].(string) + ":" + strconv.Itoa(int(managementCredentials["port"].(float64)))
+        config.RabbitURL = "https://" + managementCredentials["host"].(string) + ":" + strconv.Itoa(int(managementCredentials["port"].(float64)))
 	config.RabbitUsername = managementCredentials["username"].(string) 
 	config.RabbitPassword = managementCredentials["password"].(string)
 	return config
