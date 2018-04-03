@@ -9,4 +9,4 @@ applications:
       GOPACKAGENAME: github.com/kbudde/rabbitmq_exporter
       PUBLISH_PORT: 8080
     services:
-      - imcs-asp-dev-mq
+      - 
