@@ -4,7 +4,7 @@ applications:
     memory: 1G
     instances: 1
     buildpack: https://github.com/cloudfoundry/go-buildpack.git
-    domain: eu-west.philips-healthsuite.com
+    domain: 
     env:
       GOPACKAGENAME: github.com/kbudde/rabbitmq_exporter
       PUBLISH_PORT: 8080
